@@ -4,13 +4,20 @@ import Image from 'next/image';
 
 import useLoadImage from '@/hooks/useLoadImage';
 import { Song } from '@/types';
+import usePlayer from '@/hooks/usePlayer';
 
 interface MediaItemProps {
   data: Song;
   onClick?: (id: string) => void;
+  type?: string;
 }
 
-const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
+const MediaItem: React.FC<MediaItemProps> = ({
+  data,
+  onClick,
+  type
+}) => {
+  const player = usePlayer();
   const imageUrl = useLoadImage(data);
 
   const handleClick = () => {
@@ -18,7 +25,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
       return onClick(data.id);
     }
 
-    // TODO: Default turn on player
+    return player.setId(data.id);
   };
 
   return (
@@ -29,10 +36,10 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         items-center 
         gap-x-3 
         cursor-pointer 
-        hover:bg-neutral-800/50 
-        w-full 
+        hover:bg-neutral-800/50
         p-2 
         rounded-md
+        w-full
       '
     >
       <div
@@ -52,9 +59,14 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         />
       </div>
       <div className='flex flex-col gap-y-1 overflow-hidden'>
-        <p className='text-white truncate'>
+        <p className={`
+          text-white whitespace-nowrap
+          ${type === "PlayerContent"
+            ? "animate-marquee-custom"
+            : "truncate"}
+        `}>
           {data.title}
-          </p>
+        </p>
         <p className='text-neutral-400 text-sm truncate'>
           {data.author}
         </p>
