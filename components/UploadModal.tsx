@@ -112,7 +112,7 @@ const UploadModal = () => {
       reset();
       uploadModal.onClose();
     } catch (error) {
-      toast.error("오류가 발생했습니다.");
+      toast.error("오류 발생");
     } finally {
       setIsLoading(false);
     }
